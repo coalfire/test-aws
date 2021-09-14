@@ -26,7 +26,7 @@ def uppercase_initial(string):
     return capital + string[1:]
 
 
-def match_3_part_name_schema(objects, infix, env=r"^[^-]+-", num=r"-[0-9][0-9]$"):
+def match_env_type_num_name_scheme(objects, infix, env=r"^[^-]+-", num=r"-[0-9][0-9]$"):
     """
     Accept objects (iterable of aws objects with Tags key),
     infix (raw string for use as regex),
@@ -46,13 +46,10 @@ def ask_terraform(query):
     Accept a freeform terraform query.
     Return terraform's answer.
     """
-    old_cwd = os.getcwd()
-    #os.chdir(os.pardir)
     tf_console = ["terraform", "console"]
     tf = subprocess.run(
         tf_console, input=query, stdout=subprocess.PIPE, encoding="utf-8"
     )
-    #os.chdir(old_cwd)
     return tf.stdout.strip().strip('"')
 
 def terraform_output(query):
@@ -60,13 +57,10 @@ def terraform_output(query):
     Accept a terraform output query.
     Return terraform's answer.
     """
-    old_cwd = os.getcwd()
-    #os.chdir(os.pardir)
     tf_output = ["terraform", "output", query]
     tf = subprocess.run(
         tf_output, stdout=subprocess.PIPE, encoding="utf-8"
     )
-    #os.chdir(old_cwd)
     return tf.stdout.strip().strip('"')
 
 def terraform_value(what_type, name):

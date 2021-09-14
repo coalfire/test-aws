@@ -5,7 +5,7 @@ with open("README.rst", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="test-aws",
-    version="0.0.1",
+    version="0.0.2",
     author="Noah Birnel",
     author_email="noah.birnel@coalfire.com",
     description="tools for testing AWS cloud resources",
@@ -22,6 +22,7 @@ setuptools.setup(
         "Intended Audience :: System Administrators",
         "Intended Audience :: Information Technology",
         "Topic :: System :: Networking",
+        "Topic :: Software Development :: Testing",
     ],
     python_requires=">=3.6",
     install_requires=[
