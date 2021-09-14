@@ -1,15 +1,15 @@
 import setuptools
 
 with open("README.rst", "r", encoding="utf-8") as fh:
-    long_description = fh.read()
+    readme = fh.read()
 
 setuptools.setup(
     name="test-aws",
-    version="0.0.2",
+    version="0.0.4",
     author="Noah Birnel",
     author_email="noah.birnel@coalfire.com",
     description="tools for testing AWS cloud resources",
-    long_description=long_description,
+    long_description=readme,
     long_description_content_type="text/x-rst",
     url="https://github.com/coalfire/test-aws",
     packages=setuptools.find_packages(),

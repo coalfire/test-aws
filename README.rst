@@ -15,7 +15,7 @@ please, or be prepared to rewrite some of your tests on occasion.
 usage
 ~~~~~
 
-Create a ``test`` directory in your root terraform module.
+Create a ``test`` directory.
 
 In ``test/conftest.py``, place:
 
@@ -28,28 +28,69 @@ In ``test/conftest.py``, place:
         filters = tuple([{"Name": "vpc-id", "Values": ["vpc-0123456789abcdef0"]}])
         return t.get_instances(filters)
 
+Write some tests for all of your instances in ``test/test_all.py``:
+
+.. code-block:: python
+
+    import pytest
+
+    import testaws as t
+
+    def test_none_accept_ssh_from_world(my_vpc_instances):
+        ssh_ingress_rules = t.instances_ingress_rules_for_port(my_vpc_instances, 22)
+        actual = t.rules_cidrs_and_security_groups(ssh_ingress_rules)
+        assert "0.0.0.0/0" not in actual["cidrs"]
+
+
+Run ``pytest``.
+
+Perhaps you would like to test that your internally reachable web instances
+are only reachable from your offices,
+and that they can only be ssh'ed to from your developer offices.
+
+If you have terraform like this:
+
+.. code-block:: terraform
+
+    variable "cidr" {
+      default = {
+        cidr.adelaide      = "10.10.0.0/24"
+        cidr.buenos_aires  = "10.10.0.0/24"
+        cidr.cairo         = "10.10.0.0/24"
+        cidr.djakarta      = "10.10.0.0/24"
+        cidr.new_york      = "10.10.0.0/24"
+        cidr.paris         = "10.10.0.0/24"
+
+        cidr.mumbai        = "10.10.0.0/24"
+        cidr.san_francisco = "10.10.0.0/24"
+      }
+    }
+
+
+then you can place this is your ``test/conftest.py``:
+
+.. code-block:: python
+
     @pytest.fixture(scope="session")
     def my_offices():
         return {
-            t.terraform_variable("cidr.new_york"),
+            t.terraform_variable("cidr.adelaide"),
             t.terraform_variable("cidr.buenos_aires"),
-            t.terraform_variable("cidr.paris"),
             t.terraform_variable("cidr.cairo"),
             t.terraform_variable("cidr.djakarta"),
-            t.terraform_variable("cidr.adelaide"),
+            t.terraform_variable("cidr.new_york"),
+            t.terraform_variable("cidr.paris"),
         }
 
     @pytest.fixture(scope="session")
     def developers():
         return {
-            t.terraform_variable("cidr.san_francisco"),
             t.terraform_variable("cidr.mumbai"),
+            t.terraform_variable("cidr.san_francisco"),
         }
 
 
-Most objects are going to be ``sets``.
-
-Write some tests for a your web instances in ``test/test_web.py``:
+and write tests for your web instances in ``tests/test_web.py``:
 
 .. code-block:: python
 
@@ -71,7 +112,7 @@ Write some tests for a your web instances in ``test/test_web.py``:
         eips = t.instances_elastic_ips(web)
         assert all(eips)
 
-    def test_accept_only_ssh_and_web(web):
+    def test_accepts_only_ssh_and_web(web):
         actual = tests.instances_ingress_ports(web)
         assert actual == {22, 443}
 
@@ -85,11 +126,11 @@ Write some tests for a your web instances in ``test/test_web.py``:
         assert actual["cidrs"] == my_offices
         assert actual["sgids"] == set()
 
-    def test_send_only_web(web):
+    def test_sends_only_web(web):
         actual = tests.instances_egress_ports(web)
         assert actual == {443}
 
-    def test_is_t3_medium(web):
+    def test_is_type_t3_medium(web):
         instance_types = [instance.get('InstanceType') for instance in web]
         assert all(i_type == "t3.medium" for i_type in instance_types)
 
@@ -98,22 +139,6 @@ Write some tests for a your web instances in ``test/test_web.py``:
         assert disabled
         assert all(disabled)
 
-
-Write some tests for all of your instances in ``test/test_all.py``:
-
-.. code-block:: python
-
-    import pytest
-
-    import testaws as t
-
-    def test_none_accept_ssh_from_world(my_vpc_instances):
-        ssh_ingress_rules = t.instances_ingress_rules_for_port(my_vpc_instances, 22)
-        actual = t.rules_cidrs_and_security_groups(ssh_ingress_rules)
-        assert "0.0.0.0/0" not in actual["cidrs"]
-
-
-Run ``pytest``.
 
 philosophy and alternatives
 ---------------------------
@@ -133,8 +158,8 @@ philosophy and alternatives
 
 * use existing testing tools (in this case pytest and Python)
   rather than having new tools specific to Infrastructure-as-Code.
-* this tool is only one of many for testing Infrastructure-as-Code.
-* we dont' think other Infrastructure-as-Code philosphies are wrong,
+* ``test-aws`` is only one of many tools for testing Infrastructure-as-Code.
+* we don't think other Infrastructure-as-Code philosphies are wrong,
   but these are what ``test-aws`` is trying to accomplish.
 
 
@@ -147,3 +172,10 @@ Some other tools you might consider are:
 * https://community.chef.io/tools/chef-inspec
 
 * https://serverspec.org/
+
+developement
+------------
+
+.. code-block:: shell
+
+    make checkdoc

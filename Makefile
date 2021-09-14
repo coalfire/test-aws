@@ -1,4 +1,7 @@
-sdist:
+help:
+	@sed -n 's/\(^[-a-zA-Z_]\+\):.*/make \1/p' Makefile
+
+sdist: checkdocs
 	python3 setup.py sdist
 
 dist: sdist
@@ -31,4 +34,7 @@ clean-venv:
 local:
 	pip install .
 
-.PHONY: clean clean-all clean-dist clean-build clean-egg clean-venv
+checkdocs:
+	python setup.py checkdocs
+
+.PHONY: help clean clean-all clean-dist clean-build clean-egg clean-venv checkdocs
