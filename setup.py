@@ -5,7 +5,7 @@ with open("README.rst", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="test-aws",
-    version="0.0.4",
+    version="0.0.5",
     author="Noah Birnel",
     author_email="noah.birnel@coalfire.com",
     description="tools for testing AWS cloud resources",

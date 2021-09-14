@@ -173,9 +173,14 @@ Some other tools you might consider are:
 
 * https://serverspec.org/
 
-developement
+development
 ------------
+
+We need tests, 
+and we need more docstrings.
+
+Function names could do with a thorough review and setting a standard format.
 
 .. code-block:: shell
 
-    make checkdoc
+    make help
