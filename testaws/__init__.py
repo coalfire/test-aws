@@ -11,11 +11,11 @@ import yaml
 
 from testaws import __about__
 
-
-ec2_client = boto3.client("ec2")
-s3_client = boto3.client("s3")
-ec2 = boto3.resource("ec2")
-elbv2_client = boto3.client("elbv2")
+if os.environ.get('READTHEDOCS', False):
+    ec2_client = boto3.client("ec2")
+    s3_client = boto3.client("s3")
+    ec2 = boto3.resource("ec2")
+    elbv2_client = boto3.client("elbv2")
 
 
 def uppercase_initial(string):
