@@ -3,9 +3,8 @@ test-aws
 
 Helper functions for writing pytest against AWS infrastructure.
 
-While it need not be used with terraform,
-it includes terraform helpers to look up variables, data sources, and other
-terraform objects.
+``test-aws`` includes terraform helpers to look up 
+variables, data sources, and other terraform objects.
 
 ``test-aws`` has been in use for a few years now,
 but you should not consider it stable (yet).
