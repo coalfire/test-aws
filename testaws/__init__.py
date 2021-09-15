@@ -9,6 +9,8 @@ from botocore.exceptions import ClientError as BotoClientError
 import pytest
 import yaml
 
+from testaws import __about__
+
 
 ec2_client = boto3.client("ec2")
 s3_client = boto3.client("s3")
