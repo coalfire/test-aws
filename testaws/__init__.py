@@ -23,9 +23,13 @@ except BotoNoRegionError:
 
 def uppercase_initial(string):
     """
-    Accept string (str).
-    Return the string with the first character in upper case.
-    (For example, "disableApiTermination" returns "DisableApiTermination"
+    Return a capitalized string.
+    
+    :param string: Input string
+    :type string: str
+    :return: Capitalized input string
+    >>> uppercase_initial("disableApiTermination")
+    "DisableApiTermination"
     """
     capital = string[0].upper()
     return capital + string[1:]
@@ -48,8 +52,10 @@ def match_env_type_num_name_scheme(objects, infix, env=r"^[^-]+-", num=r"-[0-9][
 @lru_cache(maxsize=128)
 def ask_terraform(query):
     """
-    Accept a freeform terraform query.
+    Accept a freeform terraform console query.
     Return terraform's answer.
+    When possible,
+    it is easier to use terraform_data or terraform_variable instead.
     """
     tf_console = ["terraform", "console"]
     tf = subprocess.run(
@@ -69,6 +75,12 @@ def terraform_output(query):
     return tf.stdout.strip().strip('"')
 
 def terraform_value(what_type, name):
+    """
+    Accept what_type (str, 'data' or 'var'),
+    and name (str).
+    Return terraform's understanding of the data or variable.
+    It is usually easier to use terraform_data or terraform_variable instead.
+    """
     query = f"{what_type}.{name}"
     return ask_terraform(query)
 
@@ -99,6 +111,17 @@ def terraform_struct(query):
 
 
 def get_security_groups(filters=[]):
+    """
+    Accept (optional) filters (list).
+    Return security groups matching those filters. 
+    See 
+    https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSecurityGroups.html
+    and 
+    https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ec2.html#EC2.Client.describe_security_groups
+    for details on available filters.
+
+    >>> filters = [{"Name": "vpc-id", "Values": ["vpc-0123456789abcdef0"]}]
+    """
     return ec2_client.describe_security_groups(Filters=filters)["SecurityGroups"]
 
 
