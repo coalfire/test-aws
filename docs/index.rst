@@ -6,8 +6,11 @@
 Welcome to test-aws's documentation!
 ====================================
 
+.. include:: ../README.rst
+
 .. toctree::
    :maxdepth: 2
+   
    
    testaws
 
