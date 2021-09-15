@@ -6,16 +6,19 @@ import subprocess
 
 import boto3
 from botocore.exceptions import ClientError as BotoClientError
+from botocore.exceptions import NoRegionError as BotoNoRegionError
 import pytest
 import yaml
 
 from testaws import __about__
 
-if os.environ.get('READTHEDOCS', False):
+try:
     ec2_client = boto3.client("ec2")
     s3_client = boto3.client("s3")
     ec2 = boto3.resource("ec2")
     elbv2_client = boto3.client("elbv2")
+except BotoNoRegionError:
+    pass
 
 
 def uppercase_initial(string):
