@@ -205,8 +205,8 @@ def get_security_groups(filters=[]):
     for details on available filters.
 
     :param filters: Filters to apply.
-    :type filters: list of dicts, optional.
         for example: filters = [{"Name": "vpc-id", "Values": ["vpc-0123456789abcdef0"]}]
+    :type filters: list of dicts, optional.
     :return: set of security groups
     :rtype: set
     """
@@ -223,7 +223,6 @@ def get_instances(filters=[]):
 
     :param filters: Filters to apply.
     :type filters: list of dicts, optional.
-        for example: filters = [{"Name": "vpc-id", "Values": ["vpc-0123456789abcdef0"]}]
     :return: list of instances
     :rtype: list
     """
@@ -509,7 +508,7 @@ def buckets_encrypted(buckets):
 
     :param buckets: list of buckets
     :type buckets: list
-    :return; list of encryption object / None
+    :return: list of encryption object / None
     :rtype: list
     """
 
