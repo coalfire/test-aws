@@ -17,9 +17,11 @@ https://testaws.readthedocs.io/en/latest/index.html.
 usage
 ~~~~~
 
+``pip install test-aws``
+
 Create a ``test`` directory.
 
-In ``test/conftest.py``, place:
+In ``test/conftest.py``, place, for instance:
 
 .. code-block:: python
 
@@ -46,9 +48,17 @@ Write some tests for all of your instances in ``test/test_all.py``:
 
 Run ``pytest``.
 
-Perhaps you would like to test that your internally reachable web instances
-are only reachable from your offices,
-and that they can only be ssh'ed to from your developer offices.
+Perhaps you would like to test some things about 
+your internally reachable web instances:
+
+* That they are only reachable from your offices.
+* That they can only be ssh'ed to from your developer offices.
+* That they have public IPs
+* That their public IPs are elastic IPs
+* That they don't accept any traffic other than SSH and HTTPS
+* That they cannot send traffic other than HTTPS
+* That they are the correct instance type
+* That they have termination protection
 
 If you have terraform like this:
 
@@ -106,6 +116,16 @@ and write tests for your web instances in ``tests/test_web.py``:
         # prod-web-03 stage-web-01 test-web-01
         return t.match_env_type_num_name_scheme(my_vpc_instances, r"web")
 
+    def test_accepts_web_from_offices_only(web, my_offices):
+        actual = t.instances_port_ingress_sources(web, port=443)
+        assert actual["cidrs"] == my_offices
+        assert actual["sgids"] == set()
+
+    def test_accepts_ssh_from_devs_only(web, developers):
+        actual = t.instances_port_ingress_sources(web, port=443)
+        assert actual["cidrs"] == developers
+        assert actual["sgids"] == set()
+
     def test_has_public_ip(web):
         public_ips = [instance.get('PublicIpAddress') for instance in web]
         assert all(public_ips)
@@ -117,16 +137,6 @@ and write tests for your web instances in ``tests/test_web.py``:
     def test_accepts_only_ssh_and_web(web):
         actual = tests.instances_ingress_ports(web)
         assert actual == {22, 443}
-
-    def test_accepts_ssh_from_devs_only(web, developers):
-        actual = t.instances_port_ingress_sources(web, port=443)
-        assert actual["cidrs"] == developers
-        assert actual["sgids"] == set()
-
-    def test_accepts_web_from_offices_only(web, my_offices):
-        actual = t.instances_port_ingress_sources(web, port=443)
-        assert actual["cidrs"] == my_offices
-        assert actual["sgids"] == set()
 
     def test_sends_only_web(web):
         actual = tests.instances_egress_ports(web)
