@@ -142,8 +142,7 @@ def terraform_output(query):
 def terraform_value(what_type, name):
     """
     Ask terraform console for a data or a variable value.
-    When possible,
-    it is easier to use terraform_data or terraform_variable instead.
+    it is usually easier to use terraform_data or terraform_variable instead.
 
     :param what_type: "data" or "var"
     :type what_type: str
