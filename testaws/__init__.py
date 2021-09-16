@@ -205,7 +205,7 @@ def get_security_groups(filters=[]):
     for details on available filters.
 
     :param filters: Filters to apply.
-        for example: filters = [{"Name": "vpc-id", "Values": ["vpc-0123456789abcdef0"]}]
+        For example: filters = [{"Name": "vpc-id", "Values": ["vpc-0123456789abcdef0"]}]
     :type filters: list of dicts, optional.
     :return: set of security groups
     :rtype: set
@@ -214,6 +214,12 @@ def get_security_groups(filters=[]):
 
 
 def get_load_balancers():
+    """
+    Return all load balancers.
+
+    :return: List of load balancers.
+    :rtype: list
+    """
     return elbv2_client.describe_load_balancers()["LoadBalancers"]
 
 
@@ -231,9 +237,23 @@ def get_instances(filters=[]):
 
 
 def get_addresses(filters=[]):
+    """
+    Return addresss matching filter.
+
+    :param filters: Filters to apply.
+    :type filters: list of dicts, optional.
+    :return: list of addresss
+    :rtype: list
+    """
     return ec2_client.describe_addresses(Filters=filters)["Addresses"]
 
 def get_s3_buckets_names():
+    """
+    Return all S3 bucket names.
+
+    :return: List of S3 bucket names.
+    :rtype: list
+    """
     return [
         bucket['Name']
         for bucket in s3_client.list_buckets()['Buckets']
@@ -493,6 +513,15 @@ def instances_attribute(instances, attribute):
 
 
 def instances_elastic_ips(instances):
+    """
+    Return a list of elastic IPs associated with instances.
+
+    :param instances: list of instances
+    :type instances: list
+    :return: list of elastic IPs.
+    :rtype: list
+    """
+
     ids = [instance['InstanceId'] for instance in instances]
     return ec2_client.describe_addresses(
         Filters=[{
