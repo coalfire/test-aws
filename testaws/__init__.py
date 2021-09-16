@@ -65,7 +65,7 @@ def match_env_type_num_name_scheme(objects, infix, env=r"^[^-]+-", num=r"-[0-9][
 
 def objects_tags_key_values_matches_regex(objects, key, regex):
     """
-    Return objects with tagged with key matching regex.
+    Return objects tagged with key matching regex.
     You may wish to use match_env_type_num_name_scheme instead when possible.
 
     :param objects: Iterable of aws objects with a Tags key
@@ -109,9 +109,9 @@ def tags_key_value_matches_regex(aws_object, key, regex):
 def ask_terraform(query):
     """
     Ask terraform console a question.
-    When possible,
-    it is easier to use terraform_data or terraform_variable instead.
-    Use terraform_struct instead if the output will be used as a data structure.
+    It is usually easier to use terraform_data or terraform_variable instead.
+    If the output will be used as a data structure, 
+    use terraform_struct instead.
 
     :param query: terraform console expression
     :type query: str
