@@ -12,6 +12,9 @@ but you should not consider it stable (yet).
 Pin your version in your ``requirements.txt``,
 please, or be prepared to rewrite some of your tests on occasion.
 
+Complete documentation is at
+https://testaws.readthedocs.io/en/latest/index.html.
+
 usage
 ~~~~~
 
